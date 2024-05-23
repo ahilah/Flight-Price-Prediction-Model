@@ -1,5 +1,7 @@
 import pickle
 import pandas as pd
+# scale numerical features to a specified range
+from sklearn.preprocessing import MinMaxScaler
 
 # custom files
 import columns
@@ -17,7 +19,7 @@ prediction_result_path = "D:/programming/information-technologies-of-smart-syste
 # load dataset
 try:
     ds = pd.read_csv(data_path)
-    print('New data size:', ds.shape)
+    print('New data size: ', ds.shape)
 except FileNotFoundError:
     print("Error: File not found!")
     exit()
@@ -42,6 +44,20 @@ ds.rename(columns={'class': 'flight_class'}, inplace=True)
 # categorical encoding
 for column in columns.cat_columns[0:]:
     ds[column] = ds[column].map(param_dict['map_dicts'][column])
+
+# normalization
+scaler = MinMaxScaler()
+# fit the scaler to the train set, it will learn the parameters
+X_tmp = ds[columns.X_columns]
+# transform train and test sets
+scaler = MinMaxScaler().fit_transform(X_tmp)
+# list of column names in X_ymp
+columns_to_replace = X_tmp.columns
+# let's transform the returned NumPy arrays to dataframes for the rest of the dataset
+X = pd.DataFrame(scaler, columns=X_tmp.columns)
+# iterate over the columns to replace in df_encoded_MinMaxScaler
+for column in columns_to_replace:
+    ds[column] = X[column]
 
 # define target and features columns
 X = ds[columns.X_columns]
