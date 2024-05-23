@@ -36,7 +36,7 @@ except FileNotFoundError:
 ds = ds.drop('Unnamed: 0', axis=1)
 
 # dropping the useless column 'flight'
-ds = ds.drop('fight', axis=1)
+ds = ds.drop('flight', axis=1)
 
 # rename 'class' name to 'flight_class', because *class* is python reserved name
 ds.rename(columns={'class': 'flight_class'}, inplace=True)
